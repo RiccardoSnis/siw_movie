@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -30,7 +32,8 @@ public class Artist {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dateOfDeath;
 
-	private String urlOfPicture;
+	@Column(nullable = true, length = 64)
+    private String photos;
 	
 	@ManyToMany(mappedBy="actors")
 	private Set<Movie> starredMovies;
@@ -83,12 +86,12 @@ public class Artist {
 		this.dateOfDeath = dateOfDeath;
 	}
 	
-	public String getUrlOfPicture() {
-		return urlOfPicture;
+	public String getPhotos() {
+		return photos;
 	}
 	
-	public void setUrlOfPicture(String urlOfPicture) {
-		this.urlOfPicture = urlOfPicture;
+	public void setPhotos(String photos) {
+		this.photos = photos;
 	}
 	
 	public Set<Movie> getActorOf() {
@@ -106,6 +109,13 @@ public class Artist {
 	public void setDirectorOf(List<Movie> directedMovies) {
 		this.directedMovies = directedMovies;
 	}
+	
+	@Transient
+    public String getPhotosImagePath() {
+        if (photos == null || id == null) return null;
+         
+        return "/artist-photos/" + id + "/" + photos;
+    }
 
 	@Override
 	public int hashCode() {

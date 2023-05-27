@@ -1,6 +1,7 @@
 package it.uniroma3.siw.controller;
 
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -11,12 +12,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.controller.validator.MovieValidator;
 import it.uniroma3.siw.model.Artist;
@@ -25,6 +28,7 @@ import it.uniroma3.siw.model.Movie;
 import it.uniroma3.siw.service.ArtistService;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.MovieService;
+import it.uniroma3.siw.uploadUtil.FileUploadUtil;
 
 @Controller
 public class MovieController {
@@ -81,11 +85,15 @@ public class MovieController {
 	}
 
 	@PostMapping("/admin/movie")
-	public String newMovie(@Valid @ModelAttribute("movie") Movie movie, BindingResult bindingResult, Model model) {
+	public String newMovie(@Valid @ModelAttribute("movie") Movie movie, BindingResult bindingResult, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException  {
 		
 		this.movieValidator.validate(movie, bindingResult);
 		if (!bindingResult.hasErrors()) {
+			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+	        movie.setPhotos(fileName);
 			this.movieService.createNewMovie(movie);
+			String uploadDir = "movie-photos/" + movie.getId();
+	        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			model.addAttribute("movie", movie);
 			return "movie.html";
 		} else {

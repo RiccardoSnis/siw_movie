@@ -1,14 +1,19 @@
 package it.uniroma3.siw.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -29,13 +34,25 @@ public class Movie {
     @Max(2023)
 	private Integer year;
     
-	private String urlImage;
-	
 	@ManyToOne
 	private Artist director;
 	
 	@ManyToMany
 	private Set<Artist> actors;
+	
+	@Column(nullable = true, length = 64)
+	private String photos;
+	
+//	public Movie() {
+//		this.photos = new ArrayList<>();
+//	}
+	
+	@Transient
+    public String getPhotosImagePath() {
+        if (photos == null || id == null) return null;
+         
+        return "/movie-photos/" + id + "/" + photos;
+    }
 
 	public Long getId() {
 		return id;
@@ -59,13 +76,13 @@ public class Movie {
 	public void setYear(Integer year) {
 		this.year = year;
 	}
-	
-	public String getUrlImages() {
-		return urlImage;
-	}
 
-	public void setUrlImage(String urlImage) {
-		this.urlImage= (urlImage);
+	public String getPhotos() {
+		return this.photos;
+	}
+	
+	public void setPhotos(String photo) {
+		this.photos = photo;
 	}
 
 	public Artist getDirector() {

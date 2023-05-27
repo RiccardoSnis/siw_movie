@@ -1,15 +1,21 @@
 package it.uniroma3.siw.controller;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.service.ArtistService;
+import it.uniroma3.siw.uploadUtil.FileUploadUtil;
 
 @Controller
 public class ArtistController {
@@ -29,9 +35,13 @@ public class ArtistController {
 	}
 	
 	@PostMapping("/admin/artist")
-	public String newArtist(@ModelAttribute("artist") Artist artist, Model model) {
+	public String newArtist(@ModelAttribute("artist") Artist artist, Model model, @RequestParam("image") MultipartFile multipartFile) throws IOException {
 		if (!artistService.existsByNameAndSurname(artist.getName(), artist.getSurname())) {
-			this.artistService.saveArtist(artist); 
+	        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+	        artist.setPhotos(fileName);
+	        this.artistService.saveArtist(artist); 
+	        String uploadDir = "artist-photos/" + artist.getId();
+	        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			model.addAttribute("artist", artist);
 			return "artist.html";
 		} else {
