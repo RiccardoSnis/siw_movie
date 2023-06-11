@@ -72,6 +72,7 @@ body {
 .barraLogin{
 	position:absolute;
 	top: 0;
+	left: 0;
 	padding:1%;
 	width: 100%;
 	background: lightsteelblue;
