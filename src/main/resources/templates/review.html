@@ -24,9 +24,9 @@
 	
 	<div class="archivio">
     <h1 class="title">Recensioni per <span th:text="${movie.title}"> Avatar </span></h1>
-    <ul>
-		<li class="list-element"  th:each="review : ${movie.reviews}">
-    		<div th:if="${review}">
+    <ul style= "height: 300px; overflow-y: scroll;">
+		<li class="list-element"  th:each="review : ${movie.reviews}" >
+    		<div th:if="${review}" >
 				<h2>Recensione di <span th:text="${review.user.name} + ' ' + ${review.user.surname} "> Mario Rossi </span> </h2>
 				<h4> Titolo: <span th:text="${review.title}">bello</span> </h4>
 				<h4> Valutazione: <span th:text="${review.rating}">5</span> </h4>

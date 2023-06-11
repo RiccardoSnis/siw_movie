@@ -28,10 +28,10 @@
 	<div th:if="${reviews==null || reviews.isEmpty()}">Non ci sono recensioni nel sistema</div>
 	<ul>
 		<div th:unless="${reviews==null || reviews.isEmpty()}">
-		<li class="list-element" th:each="movie : ${movies}">
+		<li class="list-element" th:each="movie : ${movies}" >
 			<span> Recensioni per il film: </span>
 			<a th:href="@{'/review' + '/' + ${movie.id}}"
-				th:text="${movie.title}">Up!</a>
+				th:text="${movie.title}" >Up!</a>
 		</li>
 		</div>
 	</ul>
