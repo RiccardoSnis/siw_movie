@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Update Movie
+	</title>
+	<link rel="stylesheet" href="/css/loginAndRegisterStile.css" />
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
+	</header>
+	
+	<div class="archivio"> 
+	<h1 class="title">Aggiorna artista</h1>
+	<div th:if="${artist}">
+		<div class="list-element">
+			<span >Nome: </span><span th:text="${artist.name}"> Steven </span>
+			<div> <a th:href="@{'/admin/formUpdateArtistName/' + ${artist.id}}">Modifica nome</a> </div>
+		</div>
+		<div class="list-element">
+			<span>Cognome: </span><span th:text="${artist.surname}"> Spielberg </span>
+			<div> <a th:href="@{'/admin/formUpdateArtistSurname/' + ${artist.id}}">Modifica cognome</a> </div>
+		</div>
+		<div class="list-element">
+			<span>Data di nascita: </span><span th:text="${artist.dateOfBirth}">  </span>
+			<div> <a th:href="@{'/admin/formUpdateArtistDateOfBirth/' + ${artist.id}}">Modifica data di nascita</a></div>
+		</div>
+		<div class="list-element" th:if="${artist.dateOfDeath}">
+			<span>Data di morte: </span><span th:text="${artist.dateOfDeath}"> </span>
+			<a th:href="@{'/admin/formUpdateArtistDateOfDeath/' + ${artist.id}}">Modifica data di morte</a>
+		</div>
+		<div class="list-element"  th:unless="${artist.dateOfDeath}">
+			<div> <a th:href="@{'/admin/formUpdateArtistDateOfDeath/' + ${artist.id}}">Aggiungi data di morte</a> </div>
+		</div>
+		<div class="list-element">
+			<span>Immagine: </span> <div><img width="40%" th:src="@{${artist.photosImagePath}}" /> </div>
+			<a th:href="@{'/admin/formUpdateArtistImage/' + ${artist.id}}">Modifica immagine</a>
+		</div>
+		</div>
+	</div>
+</body>
+
+</html>

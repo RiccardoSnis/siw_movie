@@ -3,26 +3,48 @@
   <head>
     <title>Film</title>
 	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 
 <body>
-	<header>
-		<div th:if="${#request.userPrincipal}">
-			<span th:text="${#request.userPrincipal.principal.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-		<div th:unless="${#request.userPrincipal}">
-			<a href="/login">Login</a>
-		</div>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
 	</header>
 
-	<div><a href="/"><img src="/images/logo-siw.png" width="50%"/></a></div>
-    <h1>Dettagli Film</h1>
-    <div th:if="${movie}">
-        <span th:text="${movie.title}">Up!</span>
-        <span th:text="'(' + ${movie.year} + ')'">2000</span>
-        <span><img th:src="@{${movie.photosImagePath}}" /> </span>
+	<div class="archivio"> 
+    <h1 class="title">Dettagli Film</h1>
+    	<div th:if="${movie}">
+			<div class="list-element"> 
+        	<h2 th:style="'color:black'">Titolo: </h2>
+        		<span th:text="${movie.title} + '(' + ${movie.year} + ')'"> Up! 2000</span>
+        	<div th:if="${movie.director}">
+        		<h2 th:style="'color:black'">Regista: </h2>
+        			<span th:text="${movie.director.name} + ' ' + ${movie.director.surname} ">Steven Spielbergs</span>
+        	</div>
+        	<div th:unless="${movie.director}" th:style="'color:black'"> Nessun regista presente </div>
+        	<h2 th:style="'color:black'">Attori: </h2>
+        	<li th:each="actor : ${movie.actors}">
+					<span th:text="${actor.name} + ' ' + ${actor.surname}"> </span>
+				</li>
+			<h2 th:style="'color:black'">Immagini: </h2>
+        		<li th:each="photo : ${movie.photos}">
+					<span><img width="50%" th:src="@{${movie.photosImagePath} + ${photo}}" /> </span>
+				</li>
+			</div>
+    	</div>
+    	<div th:unless="${movie}">Non esiste</div>
     </div>
-    <div th:unless="${movie}">Non esiste</div>
   </body>
 </html>
+

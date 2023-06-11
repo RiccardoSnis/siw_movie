@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Update Artist
+	</title>
+	<link rel="stylesheet" href="/css/loginAndRegisterStile.css" />
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
+	</header>
+
+	<div class="archivio"> 
+	<h1 class="title">Aggiorna artista</h1>
+		<div class="list-element">
+			<span  th:text="${artist.name} + ' ' + ${artist.surname} ">Mario Rossi</span>
+			<span> <a th:href="@{'/admin/formUpdateArtist/' + ${artist.id}}">Modifica</a> </span> 
+			<span> <a th:href="@{'/admin/deleteArtist' + '/' + ${artist.id}}">Elimina</a> </span>
+		</div>
+</body>
+
+</html>

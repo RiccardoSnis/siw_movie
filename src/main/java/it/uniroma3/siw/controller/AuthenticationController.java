@@ -18,6 +18,7 @@ import it.uniroma3.siw.controller.validator.CredentialsValidator;
 import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.model.User;
 import it.uniroma3.siw.service.CredentialsService;
+import it.uniroma3.siw.service.UserService;
 
 @Controller
 public class AuthenticationController {
@@ -25,8 +26,11 @@ public class AuthenticationController {
 	@Autowired
 	private CredentialsService credentialsService;
 	
-	@Autowired 
+	@Autowired
 	private CredentialsValidator credentialsValidator;
+
+    @Autowired
+	private UserService userService;
 	
 	@GetMapping(value = "/register") 
 	public String showRegisterForm (Model model) {
@@ -52,6 +56,9 @@ public class AuthenticationController {
 			if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
 				return "admin/indexAdmin.html";
 			}
+			if(credentials.getRole().equals(Credentials.DEFAULT_ROLE)) {
+				return "registeredUser/indexRegisteredUser.html";
+			}
 		}
         return "index.html";
 	}
@@ -64,6 +71,9 @@ public class AuthenticationController {
     	if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
             return "admin/indexAdmin.html";
         }
+    	if (credentials.getRole().equals(Credentials.DEFAULT_ROLE)) {
+            return "registeredUser/indexRegisteredUser.html";
+        }
         return "index.html";
     }
 
@@ -74,9 +84,11 @@ public class AuthenticationController {
                  BindingResult credentialsBindingResult,
                  Model model) {
 
-        // se user e credential hanno entrambi contenuti validi, memorizza User e the Credentials nel DB
+		
+		// se user e credential hanno entrambi contenuti validi, memorizza User e the Credentials nel DB
 		this.credentialsValidator.validate(credentials, credentialsBindingResult);
-        if(!userBindingResult.hasErrors() && ! credentialsBindingResult.hasErrors()) {
+        if(!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
+            userService.saveUser(user);
             credentials.setUser(user);
             credentialsService.saveCredentials(credentials);
             model.addAttribute("user", user);

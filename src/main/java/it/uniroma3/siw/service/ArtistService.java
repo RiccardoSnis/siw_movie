@@ -31,5 +31,9 @@ public class ArtistService {
 		this.artistRepository.save(artist);
 	}
 	
+	@Transactional
+	public void deleteArtist(Artist artist) {
+		this.artistRepository.delete(artist);
+	}
 
 }

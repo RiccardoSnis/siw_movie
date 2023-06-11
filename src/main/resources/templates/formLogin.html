@@ -5,42 +5,39 @@
 	<title>
 		SiwMovie - Login
 	</title>
-	<link rel="stylesheet" href="/css/stile.css" />
+	<link rel="stylesheet" href="/css/loginAndRegisterStile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 
 <body>
-	<header>
-		<div th:if="${#request.userPrincipal}">
-			<span th:text="${#request.userPrincipal.principal.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-		<div th:unless="${#request.userPrincipal}">
-			<a href="/login">Login</a>
-		</div>
-	</header>
 
-	<div>
-		<a href="/"><img src="/images/logo-siw.png" width="50%"/></a>
-	</div>
-	<h1>Login</h1>
-	<form th:action="@{/login}" method="POST">
-			<div>
-				<span>Username:</span>
-				<span><input name="username" type="text" required /></span>
+	<div class="login-form">
+		<form th:action="@{/login}" method="POST">
+			<header class="title">Sign In</header>
+			
+			<div class="input-container">
+				<div class="input-element">
+					<input name="username" type="text" placeholder="Username" required="required">
+					<i class="fa-solid fa-user"> </i>
+				</div>
+				
+				<div class="input-element">
+					<input name="password" type="password" placeholder="Password" required="required">
+					<i class="fa-solid fa-lock"> </i>
+				</div>
 			</div>
-			<div>
-				<span>Password:</span>
-				<span><input name="password" type="password" required /></span>
+			
+			<span th:if="${param.error != null}" th:style="'color:white'">Username o password errati</span>
+				
+			<div class="input-btn">
+				<button type="submit" class="sign-in-btn">Login </button>
 			</div>
-			<div>
-				<span th:if="${param.error != null}">Username o password errati</span>
+			
+			<div class="signup-link">
+				<span>Non hai un account?<a th:href="@{/register}" th:text="Registrati">Registrati qui</a> </span>
 			</div>
-			<div>
-				<span><button type="submit">Login</button></span>
-			</div>
-	</form>
-	<div>
-		<a th:href="@{/register}" th:text="Registrati">Registrati</a>
+			
+		</form>
 	</div>
 </body>
 

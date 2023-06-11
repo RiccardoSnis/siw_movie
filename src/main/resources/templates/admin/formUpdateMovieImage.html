@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Update Movie Image
+	</title>
+	<link rel="stylesheet" href="/css/loginAndRegisterStile.css" />
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
+	</header>
+
+	<div class="login-form">
+		<form th:action="@{'/admin/addImage/' + ${movie.id}}" method="POST" th:object="${movie}" enctype="multipart/form-data">
+			<h1 class="title">Aggiorna l'immagine del film</h1>
+			<div class="input-container" style= "height: 300px; overflow-y: scroll;">
+				<h2 th:style="'color:black'">Immagini: </h2>
+					<div  th:each="photo: ${movie.photos}">
+						<span><img width="40%" th:src="@{${movie.photosImagePath} + ${photo}}" /> </span>
+					</div>
+			 		<input th:style="'color:white'" class="input-btn" type="file" name="image" accept="image/png, image/jpeg" required/>
+			 </div>
+					<div class="input-btn"><button type="submit">Conferma</button></div>
+			</form>
+		</div>
+		<div th:unless="${movie}">Film non esistente</div>
+	</div>
+</body>
+
+</html>

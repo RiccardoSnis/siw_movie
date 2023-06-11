@@ -5,47 +5,58 @@
 	<title>
 		New Movie
 	</title>
+	<link rel="stylesheet" href="/css/loginAndRegisterStile.css" />
 	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 
 <body>
-	<header>
-		<div th:if="${#request.userPrincipal}">
-			<span th:text="${#request.userPrincipal.principal.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-		<div th:unless="${#request.userPrincipal}">
-			<a href="/login">Login</a>
-		</div>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
 	</header>
-	<div><a href="/"><img src="/images/logo-siw.png" width="50%"/></a></div>
-	<h1>Aggiungi un film</h1>
-	<form th:action="@{/admin/movie}" method="POST" th:object="${movie}" enctype="multipart/form-data">
+	
+	
+	<div class="login-form">
+	<form th:action="@{/admin/movie}" method="POST" th:object="${movie}" enctype="multipart/form-data" class="form-group">
+  		<h1 class="title">Aggiungi un film</h1>
+  		<div class="input-container">
+			  
   		<div th:if="${#fields.hasGlobalErrors()}">
   			<p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p> 
   		</div>
 		
-		<div>
-			<label>Titolo:</label> 
-			<span><input type="text" th:field="${movie.title}" /></span>
+		<div class="input-element">
+			<span><input placeholder="Titolo" type="text" th:field="${movie.title}" /></span>
 		    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
 		    </span>
 		</div>
 
-		<div>
-			<label>Anno:</label> <span><input type="text" th:field="${movie.year}" /></span>
+		<div class="input-element">
+			<span><input placeholder="Anno" type="text" th:field="${movie.year}" /></span>
 		    <span th:if="${#fields.hasErrors('year')}" th:errors="*{year}">
 		    </span>
 		</div>
 
-		<div>
-   		 	<label>Foto: </label> <input type="file" name="image" accept="image/png, image/jpeg" />
+		<div class="input-element">
+   		 	<input type="file" name="image" required accept="image/png, image/jpeg"/>
     	</div>
-		
-		<div>
+  		</div>
+		<div class="input-btn">
 			<span><button type="submit">Conferma</button></span>
 		</div>
 	</form>
+	</div>
 </body>
 
 </html>

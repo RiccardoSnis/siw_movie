@@ -4,7 +4,6 @@ package it.uniroma3.siw.controller;
 import java.io.IOException;
 import java.util.List;
 
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,11 @@ import it.uniroma3.siw.controller.validator.MovieValidator;
 import it.uniroma3.siw.model.Artist;
 import it.uniroma3.siw.model.Credentials;
 import it.uniroma3.siw.model.Movie;
+import it.uniroma3.siw.model.Review;
 import it.uniroma3.siw.service.ArtistService;
 import it.uniroma3.siw.service.CredentialsService;
 import it.uniroma3.siw.service.MovieService;
+import it.uniroma3.siw.service.ReviewService;
 import it.uniroma3.siw.uploadUtil.FileUploadUtil;
 
 @Controller
@@ -36,15 +37,18 @@ public class MovieController {
 	private MovieService movieService;
 	
 	@Autowired 
+	private ReviewService reviewService;
+	
+	@Autowired 
 	private ArtistService artistService;
+	
+	@Autowired
+	private CredentialsService credentialsService;
 
 	@Autowired 
 	private MovieValidator movieValidator;
 	
 	
-	@Autowired 
-	private CredentialsService credentialsService;
-
 	@GetMapping(value="/admin/formNewMovie")
 	public String formNewMovie(Model model) {
 		model.addAttribute("movie", new Movie());
@@ -90,9 +94,9 @@ public class MovieController {
 		this.movieValidator.validate(movie, bindingResult);
 		if (!bindingResult.hasErrors()) {
 			String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-	        movie.setPhotos(fileName);
-			this.movieService.createNewMovie(movie);
-			String uploadDir = "movie-photos/" + movie.getId();
+	        movie.addPhotos(fileName);
+			Movie saved = this.movieService.saveMovie(movie);
+			String uploadDir = "movie-photos/" + saved.getId();
 	        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
 			model.addAttribute("movie", movie);
 			return "movie.html";
@@ -109,24 +113,26 @@ public class MovieController {
 
 	@GetMapping("/movie")
 	public String getMovies(Model model) {
-		
-    	UserDetails userDetails = (UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-
 		model.addAttribute("movies", this.movieService.findAllMovies());
-		model.addAttribute("user", credentials.getUser());
 		return "movies.html";
 	}
 	
-	@GetMapping("/formSearchMovies")
+	@GetMapping("/registeredUser/moviesAndReview")
+	public String getMoviesAndReview(Model model) {
+		model.addAttribute("movies", this.movieService.findAllMovies());
+		return "registeredUser/moviesAndReview.html";
+	}
+	
+	
+	@GetMapping("/admin/formSearchMovies")
 	public String formSearchMovies() {
-		return "formSearchMovies.html";
+		return "/admin/formSearchMovies.html";
 	}
 
 	@PostMapping("/searchMovies")
 	public String searchMovies(Model model, @RequestParam int year) {
 		model.addAttribute("movies", this.movieService.findByYear(year));
-		return "foundMovies.html";
+		return "/admin/foundMovies.html";
 	}
 	
 	@GetMapping("/admin/updateActors/{id}")
@@ -138,6 +144,22 @@ public class MovieController {
 
 		return "admin/actorsToAdd.html";
 	}
+	
+	@PostMapping("/admin/addImage/{id}")
+	public String addImage(@PathVariable("id") Long id, Model model, @RequestParam("image") MultipartFile multipartFile ) throws IOException {
+		
+		Movie movie = this.movieService.findMovieById(id);
+		//model.addAttribute("movie", this.movieService.findMovieById(id));
+		String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        movie.addPhotos(fileName);
+		Movie saved = this.movieService.saveMovie(movie);
+		String uploadDir = "movie-photos/" + saved.getId();
+        FileUploadUtil.saveFile(uploadDir, fileName, multipartFile);
+		model.addAttribute("movie", movie);
+
+		return "admin/formUpdateMovie.html";
+	}
+
 
 	@GetMapping(value="/admin/addActorToMovie/{actorId}/{movieId}")
 	public String addActorToMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
@@ -151,6 +173,7 @@ public class MovieController {
 		return "admin/actorsToAdd.html";
 	}
 	
+	
 	@GetMapping(value="/admin/removeActorFromMovie/{actorId}/{movieId}")
 	public String removeActorFromMovie(@PathVariable("actorId") Long actorId, @PathVariable("movieId") Long movieId, Model model) {
 	
@@ -162,13 +185,27 @@ public class MovieController {
 
 		return "admin/actorsToAdd.html";
 	}
-
-	/*private List<Artist> actorsToAdd(Long movieId) {
-		List<Artist> actorsToAdd = new ArrayList<>();
-
-		for (Artist a : artistRepository.findActorsNotInMovie(movieId)) {
-			actorsToAdd.add(a);
+	
+	@GetMapping("/admin/deleteMovies")
+	public String deleteMovies(Model model) {
+		model.addAttribute("movies", this.movieService.findAllMovies());
+		return "/admin/deleteMovies.html";
+	}
+	
+	@GetMapping("/admin/deleteMovie/{movieId}")
+	public String deleteMovies(@PathVariable("movieId") Long movieId, Model model) {
+		List <Review> reviews = (List<Review>) this.reviewService.reviewByMovieIdToDelete(movieId);
+		for(Review review : reviews) {
+			this.reviewService.deleteReview(review);
 		}
-		return actorsToAdd;
-	}*/
+		this.movieService.deleteMovie(this.movieService.findMovieById(movieId));
+		model.addAttribute("movies", this.movieService.findAllMovies());
+		return "/admin/deleteMovies.html";
+	}
+	
+	@GetMapping("/admin/formUpdateMovieImage/{movieId}")
+	public String updateMovieImage(@PathVariable("movieId") Long movieId, Model model) {
+		model.addAttribute("movie", this.movieService.findMovieById(movieId));
+		return "/admin/formUpdateMovieImage.html";
+	}
 }

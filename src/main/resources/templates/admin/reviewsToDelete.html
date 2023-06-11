@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Film</title>
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
+	</header>
+	
+	<div class="archivio">
+    <h1 class="title">Recensioni per <span th:text="${movie.title}"> Avatar </span></h1>
+    <ul>
+		<li class="list-element"  th:each="review : ${movie.reviews}">
+    		<div th:if="${review}">
+				<h2>Recensione di <span th:text="${review.user.name} + ' ' + ${review.user.surname} "> Mario Rossi </span> </h2>
+				<h4> Titolo: <span th:text="${review.title}">bello</span> </h4>
+				<h4> Valutazione: <span th:text="${review.rating}">5</span> </h4>
+				<h4> Testo: <span th:text="${review.text}">molto scorrevole</span> </h4>
+				<h4> <a th:href="@{'/deleteReview' + '/' + ${review.id}}">Elimina</a></h4>
+    		</div>
+    		<div th:unless="${review}">Non esiste</div>
+		</li>
+    </ul>
+    </div>
+  </body>
+</html>
+

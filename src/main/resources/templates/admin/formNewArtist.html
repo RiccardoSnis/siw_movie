@@ -5,50 +5,58 @@
 	<title>
 		New Artist
 	</title>
+	<link rel="stylesheet" href="/css/loginAndRegisterStile.css" />
 	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 
 <body>
-	<header>
-		<div th:if="${#request.userPrincipal}">
-			<span th:text="${#request.userPrincipal.principal.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-		<div th:unless="${#request.userPrincipal}">
-			<a href="/login">Login</a>
-		</div>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
 	</header>
 
-	<div><a href="/"><img src="/images/logo-siw.png" width="50%"/></a></div>
-	<h1>Aggiungi un artista</h1>
+	<div class="login-form">
 	<form th:action="@{/admin/artist}" method="POST" th:object="${artist}" enctype="multipart/form-data">
-		<div>
-			<span th:text="${messaggioErrore}">Errore</span>
-		</div>
-		
-		<div>
-			<label>Nome:</label> <span><input required type="text" th:field="${artist.name}" /></span>
-		</div>
+		<h1 class="title">Aggiungi un artista</h1>
+		<div> <span th:text="${messaggioErrore}">Errore</span> </div>
+		<div class="input-container" style= "height: 300px; overflow-y: scroll;">
+			
+			<div class="input-element">
+				<span><input placeholder="Nome" type="text" th:field="${artist.name}" /></span> 
+			</div>
 
-		<div>
-			<label>Cognome:</label> <span><input required type="text" th:field="${artist.surname}" /></span>
-		</div>
+			<div class="input-element">
+				 <span><input placeholder="Cognome" required type="text" th:field="${artist.surname}" /></span>
+			</div>
 
-		<div>
-			<label>Data di nascita:</label> <span><input type="date" th:field="${artist.dateOfBirth}" /></span>
-		</div>
-		
-		<div>
-			<label>Data di morte:</label> <span><input type="date" th:field="${artist.dateOfDeath}" /></span>
-		</div>
+			<div class="input-element">
+				<label th:style="'color:black'">Data di nascita:</label> <span><input type="date" th:field="${artist.dateOfBirth}" /></span> 
+			</div>	
+			
+			<div class="input-element">
+				 <label th:style="'color:black'">Data di morte:</label> <span><input type="date" th:field="${artist.dateOfDeath}" /></span>
+			</div>
 
-		<div>
-   		 	<label>Foto: </label> <input type="file" name="image" accept="image/png, image/jpeg" />
-    	</div>
-		<div>
+			<div class="input-element">
+   		 		<label th:style="'color:black'">Foto: </label> <input type="file" name="image" required accept="image/png, image/jpeg" />
+    		</div>
+		</div>
+		<div class="input-btn">
 			<span><button type="submit">Conferma</button></span>
 		</div>
 	</form>
+	</div>
 </body>
 
 </html>

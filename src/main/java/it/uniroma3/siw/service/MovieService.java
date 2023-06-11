@@ -26,10 +26,6 @@ public class MovieService {
     @Autowired
     private ArtistService artistService;
     
-    @Transactional
-    public void createNewMovie(Movie movie) {
-    	this.movieRepository.save(movie);
-    }
     
     @Transactional
     public Movie findMovieById(Long id) {
@@ -37,8 +33,14 @@ public class MovieService {
     }
     
     @Transactional
-    public void saveMovie(Movie movie) {
+    public Movie saveMovie(Movie movie) {
     	this.movieRepository.save(movie);
+    	return movie;
+    }
+    
+    @Transactional
+    public void deleteMovie(Movie movie) {
+    	this.movieRepository.delete(movie);
     }
     
     public Iterable<Movie> findAllMovies(){

@@ -3,27 +3,36 @@
   <head>
     <title>Artista</title>
 	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 </head>
 
 <body>
-	<header>
-		<div th:if="${#request.userPrincipal}">
-			<span th:text="${#request.userPrincipal.principal.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-		<div th:unless="${#request.userPrincipal}">
-			<a href="/login">Login</a>
-		</div>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
 	</header>
 
-	<div><a href="/"><img src="/images/logo-siw.png" width="50%"/></a></div>
-    <h1>Dettagli Artista</h1>
+	<div class="archivio">
+    <h1 class="title">Dettagli Artista</h1>
+    <div class="list-element">
     <div th:if="${artist}">
-        <span th:text="${artist.name} + ' ' + ${artist.surname}">Dino Risi</span>
-        <span th:text="'(' + ${artist.dateOfBirth} + ')'">20/20/2000</span>
+        <h2 th:text="${artist.name} + ' ' + ${artist.surname}" th:style="'color:black'">Dino Risi</h2>
+        <div th:text="'(' + ${artist.dateOfBirth} + ')'">20/20/2000</div>
          <span th:text="${artist.dateOfDeath != null} ? '(' + ${artist.dateOfDeath} + ')' : ''">20/20/2000</span>
-        <span><img width="5%" th:src="@{${artist.photosImagePath}}" /> </span>
+        <div><img width="50%" th:src="@{${artist.photosImagePath}}" /> </div>
     </div>
     <div th:unless="${artist}">Non esiste</div>
+	</div>
+	</div>
   </body>
 </html>

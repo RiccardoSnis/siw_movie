@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Film</title>
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<body>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
+	</header>
+
+	<div class="archivio"> 
+		<h1 class="title"> Film che soddisfano i requisiti</h1>
+		<div th:if="${movies.isEmpty()}" th:style="'color:white'">Non ci sono film che soddisfano i requisiti</div>
+		<ul th:if="${!movies.isEmpty()}">
+			<li class="list-element" th:each="movie : ${movies}">
+				<a href="movie.html" th:href="@{'/movie' + '/' + ${movie.id}}"
+					th:text="${movie.title} + ' (' + ${movie.year}+')'">Up! (2000)</a>
+			</li>
+		</ul>
+	</div>
+</body>
+
+</html>

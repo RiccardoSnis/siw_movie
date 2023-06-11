@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>
+		Update Artist date of death
+	</title>
+	<link rel="stylesheet" href="/css/loginAndRegisterStile.css" />
+	<link rel="stylesheet" href="/css/stile.css" />
+	<link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+
+<div>
+	<header class="barraLogin">
+		<span>
+			<a href="/"> <i class="fa fa-home" aria-hidden="true"></i> </a>
+		</span>
+		<span th:if="${#request.userPrincipal}">
+		<span>
+			<a href="/logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> </a>
+		</span>
+			<div th:text="${#request.userPrincipal.principal.username}"></div>
+		</span>
+		<span th:unless="${#request.userPrincipal}">
+			<a href="/login"> <i class="fa fa-sign-in" aria-hidden="true"></i> </a>
+		</span>
+	</header>
+</div>
+	
+	<div class="login-form">
+	<h1 class="title">Aggiorna la data di morte</h1>
+	<form th:action="@{'/admin/updateDateOfDeath' + '/' + ${artist.id}}" method="POST" th:object="${artist}">
+  		<div th:if="${#fields.hasGlobalErrors()}">
+  			<p th:each="err : ${#fields.globalErrors()}" th:text="${err}">...</p> 
+  		</div>
+		
+		<div class="input-container">
+			<div class="input-element">
+				<span><input type="date" th:value="${dateOfDeath}" name="dateOfDeath" required/> </span>
+		    	<span th:if="${#fields.hasErrors('dateOfDeath')}" th:errors="*{dateOfDeath}"> </span>
+			</div>
+		</div>
+		<div class="input-btn">
+			<button type="submit">Conferma</button>
+		</div>
+	</form>
+	</div>
+</body>
+
+</html>
