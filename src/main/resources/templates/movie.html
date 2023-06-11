@@ -26,21 +26,23 @@
     <h1 class="title">Dettagli Film</h1>
     	<div th:if="${movie}">
 			<div class="list-element"> 
-        	<h2 th:style="'color:black'">Titolo: </h2>
-        		<span th:text="${movie.title} + '(' + ${movie.year} + ')'"> Up! 2000</span>
-        	<div th:if="${movie.director}">
-        		<h2 th:style="'color:black'">Regista: </h2>
-        			<span th:text="${movie.director.name} + ' ' + ${movie.director.surname} ">Steven Spielbergs</span>
-        	</div>
-        	<div th:unless="${movie.director}" th:style="'color:black'"> Nessun regista presente </div>
-        	<h2 th:style="'color:black'">Attori: </h2>
-        	<li th:each="actor : ${movie.actors}">
-					<span th:text="${actor.name} + ' ' + ${actor.surname}"> </span>
-				</li>
-			<h2 th:style="'color:black'">Immagini: </h2>
-        		<li th:each="photo : ${movie.photos}">
-					<span><img width="50%" th:src="@{${movie.photosImagePath} + ${photo}}" /> </span>
-				</li>
+        		<h2 th:style="'color:black'">Titolo: </h2>
+        			<span th:text="${movie.title} + '(' + ${movie.year} + ')'"> Up! 2000</span>
+        		<div th:if="${movie.director}">
+        			<h2 th:style="'color:black'">Regista: </h2>
+        				<span th:text="${movie.director.name} + ' ' + ${movie.director.surname} ">Steven Spielbergs</span>
+        		</div>
+        		<div th:unless="${movie.director}" th:style="'color:black'"> Nessun regista presente </div>
+        		<h2 th:style="'color:black'">Attori: </h2>
+        		<li th:each="actor : ${movie.actors}">
+						<span th:text="${actor.name} + ' ' + ${actor.surname}"> </span>
+					</li>
+				<h2 th:style="'color:black'" >Immagini: </h2>
+				<div style= "height: 300px; overflow-y: scroll;">
+        			<li th:each="photo : ${movie.photos}" >
+						<span><img width="50%" th:src="@{${movie.photosImagePath} + ${photo}}" /> </span>
+					</li>
+				</div>
 			</div>
     	</div>
     	<div th:unless="${movie}">Non esiste</div>
